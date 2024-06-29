@@ -2,7 +2,7 @@ pool:
   vmImage: "ubuntu-latest"
 
 stages:
-  - stage: API
+  - stage: Dev
     jobs:
       - deployment: Dev
         pool:
@@ -14,10 +14,28 @@ stages:
               steps:
                 - bash: echo "Hello World"
                 - bash: echo $(System.JobName)
+  - stage: RC
+    dependsOn:
+      - Dev
+    jobs:
       - deployment: RC
         pool:
           vmImage: "ubuntu-latest"
         environment: RC
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - bash: echo "Hello World"
+                - bash: echo $(System.JobName)
+  - stage: Prod
+    dependsOn:
+      - RC
+    jobs:
+      - deployment: Prod
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: Prod
         strategy:
           runOnce:
             deploy:
