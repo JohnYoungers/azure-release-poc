@@ -2,7 +2,7 @@ pool:
   vmImage: "ubuntu-latest"
 
 stages:
-  - stage: API Deployment
+  - stage: API
     jobs:
       - deployment: Dev
         pool:
