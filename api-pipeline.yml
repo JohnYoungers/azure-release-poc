@@ -1,0 +1,46 @@
+name: "API"
+
+pool:
+  vmImage: "ubuntu-latest"
+
+stages:
+  - stage: Dev
+    jobs:
+      - deployment: Dev
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: Dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - bash: echo "Hello World"
+                - bash: echo $(System.JobName)
+  - stage: RC
+    dependsOn:
+      - Dev
+    jobs:
+      - deployment: RC
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: RC
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - bash: echo "Hello World"
+                - bash: echo $(System.JobName)
+  - stage: Prod
+    dependsOn:
+      - RC
+    jobs:
+      - deployment: Prod
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: Prod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - bash: echo "Hello World"
+                - bash: echo $(System.JobName)
